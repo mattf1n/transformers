@@ -109,9 +109,7 @@ class TrainingArguments:
     )
     hub_token: str = field(default=None, metadata={"help": "The token to use to push to the Model Hub."})
 
-    # BEGIN mattf1n addition ---------
     freeze_wte: bool = field(default=False, metadata={"help": "Whether or not to freeze the embedding matrix"})
-    # END mattf1n addition -----------
 
     def __post_init__(self):
         if self.output_dir is not None:
@@ -667,8 +665,6 @@ def main():
             mask=decay_mask_fn,
         )
 
-    # BEGIN Added by mattf1n to allow freezing the WTE --------------------
-
     def param_label_fn(params):
         flat_params = traverse_util.flatten_dict(params)
         flat_labels = {path: "optimize" if "wte" not in path else "freeze"
@@ -679,8 +675,6 @@ def main():
         optimizer = optax.multi_transform(
                 {'optimize': optimizer, 'freeze': optax.set_to_zero()}, 
                 param_label_fn)
-    
-    # END Added by mattf1n ------------------------------------------------
 
     # Setup train state
     state = TrainState.create(apply_fn=model.__call__, params=model.params, tx=optimizer, dropout_rng=dropout_rng)
