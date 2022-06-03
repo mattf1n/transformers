@@ -1,0 +1,50 @@
+version: v2
+description: natural instructions
+tasks:
+  - name: test-gptj-train
+    image:
+      beaker: matthewf/gpt-neo
+    command: 
+      - python
+      - run_clm_flax.py
+      - --model_name_or_path
+      - EleutherAI/gpt-neo-125M
+      - --do_train 
+      - --train_file
+      - /data/0.csv
+      - --output_dir 
+      - /output
+      - --per_device_train_batch_size=32 
+      - --num_train_epochs
+      - 1
+      - --max_train_samples
+      - 10_000 
+      - --overwrite_output_dir 
+      - --push_to_hub
+      - --hub_model_id 
+      - mattf1n/contd-flax-gpt-neo-125M
+      - --hub_token 
+      - $HUB_TOKEN
+      - --freeze_wte
+    datasets:
+      - mountPath: /data
+        source: 
+          beaker: matthewf/the-pile-00
+      - mountPath: /config
+        source: 
+          beaker: matthewf/ds-config-gpt-neo
+      - mountPath: /net/nfs.cirrascale
+        source:
+          hostPath: /net/nfs.cirrascale
+    envVars:
+      - name: HUB_TOKEN
+        secret: HUB_TOKEN
+      - name: HF_HOME
+        value: /net/nfs.cirrascale/aristo/matthewf/.hf
+    result:
+      path: /output
+    resources:
+      gpuCount: 1
+    context:
+      cluster: ai2/aristo-cirrascale
+      priority: normal
