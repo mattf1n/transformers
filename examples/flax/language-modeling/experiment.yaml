@@ -3,7 +3,7 @@ description: natural instructions
 tasks:
   - name: test-gptj-train
     image:
-      beaker: matthewf/gpt-neo
+      beaker: matthewf/flax-neo
     command: 
       - python
       - run_clm_flax.py
@@ -12,20 +12,26 @@ tasks:
       - --do_train 
       - --train_file
       - /data/0.csv
+      - --do_eval 
+      - --validation_file
+      - /data/0.csv
       - --output_dir 
-      - /output
-      - --per_device_train_batch_size=32 
+      - /gpt-neo-125M-contd-00-0
+      - --per_device_train_batch_size=4 
       - --num_train_epochs
       - 1
+      - --max_eval_samples
+      - 100 
       - --max_train_samples
-      - 10_000 
+      - 100_000 
+      - --save_steps
+      - 1_0000
+      - --eval_steps
+      - 1_0000
       - --overwrite_output_dir 
-      - --push_to_hub
-      - --hub_model_id 
-      - mattf1n/contd-flax-gpt-neo-125M
-      - --hub_token 
-      - $HUB_TOKEN
       - --freeze_wte
+      - --report_to 
+      - wandb
     datasets:
       - mountPath: /data
         source: 
@@ -41,8 +47,10 @@ tasks:
         secret: HUB_TOKEN
       - name: HF_HOME
         value: /net/nfs.cirrascale/aristo/matthewf/.hf
+      - name: NUM_GPUS
+        value: 1
     result:
-      path: /output
+      path: /gpt-neo-125M-contd-00-0
     resources:
       gpuCount: 1
     context:

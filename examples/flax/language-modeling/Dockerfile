@@ -5,3 +5,5 @@ WORKDIR /stage/
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY run_clm_flax.py .
+RUN sudo apt install git-lfs
+RUN git lfs install
