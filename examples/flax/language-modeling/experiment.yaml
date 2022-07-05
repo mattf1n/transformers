@@ -7,27 +7,18 @@ tasks:
     command: 
       - python
       - run_clm_flax.py
-      - --model_name_or_path
-      - EleutherAI/gpt-neo-125M
+      - --model_name_or_path=EleutherAI/gpt-neo-125M
       - --do_train 
-      - --train_file
-      - /data/0.csv
+      - --train_file=/data/0.csv
       - --do_eval 
-      - --validation_file
-      - /data/0.csv
-      - --output_dir 
-      - /gpt-neo-125M-contd-00-0
+      - --evaluation_strategy=steps
+      - --validation_file=/data/0.csv
+      - --output_dir=/gpt-neo-125M-contd-00-0
       - --per_device_train_batch_size=4 
-      - --num_train_epochs
-      - 1
-      - --max_eval_samples
-      - 100 
-      - --max_train_samples
-      - 100_000 
-      - --save_steps
-      - 1_0000
-      - --eval_steps
-      - 1_0000
+      - --num_train_epochs=1
+      - --max_eval_samples=100 
+      - --max_train_samples=100_000 
+      - --save_total_limit=1
       - --overwrite_output_dir 
       - --freeze_wte
       - --report_to 

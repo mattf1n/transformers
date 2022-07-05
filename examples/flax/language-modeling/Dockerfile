@@ -7,3 +7,5 @@ RUN pip install -r requirements.txt
 COPY run_clm_flax.py .
 RUN sudo apt install git-lfs
 RUN git lfs install
+RUN git clone https://github.com/mattf1n/transformers
+RUN pip install ./transformers
