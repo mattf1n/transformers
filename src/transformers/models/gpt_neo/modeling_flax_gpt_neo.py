@@ -451,7 +451,7 @@ class FlaxGPTNeoPreTrainedModel(FlaxPreTrainedModel):
 
         outputs = self.module.apply(
             inputs,
-            inputs_embeds if input_ids is None else jnp.array(input_ids, dtype="i4"),
+            None if input_ids is None else jnp.array(input_ids, dtype="i4"),
             jnp.array(attention_mask, dtype="i4"),
             jnp.array(position_ids, dtype="i4"),
             inputs_embeds,
